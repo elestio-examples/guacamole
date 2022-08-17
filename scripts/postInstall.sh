@@ -17,4 +17,4 @@ EOF
 
 sleep 10s;
 
-docker-compose exec -T mariadb mysql -u root -p${MYSQL_ROOT_PASSWORD} guacamole_db < /var/lib/mysql/add.sql
+docker-compose exec -T mariadb mysql -u root -p${MYSQL_ROOT_PASSWORD} guacamole_db < ./mariadb/add.sql

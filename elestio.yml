@@ -20,6 +20,8 @@ environments:
     value: "random_password"
   - key: "MYSQL_ROOT_PASSWORD"
     value: "random_password"
+  - key: "MYSQL_PASSWORD"
+    value: "random_password"
 config:
   runTime: "dockerCompose"
   version: ""
