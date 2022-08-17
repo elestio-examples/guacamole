@@ -1,0 +1,54 @@
+version: "3"
+services:
+
+  init-guac-db:
+    image: guacamole/guacamole:${SOFTWARE_VERSION_TAG}
+    command: ["/bin/sh", "-c", "test -e /init/initdb.sql && echo 'init file already exists' || /opt/guacamole/bin/initdb.sh --mysql > /init/initdb.sql" ]
+    volumes:
+      - ./init:/init
+
+  mariadb:
+    image: mariadb
+    restart: 'always'
+    volumes:
+      - ./mariadb:/var/lib/mysql/
+      - ./init:/docker-entrypoint-initdb.d:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    #ucomment below if you want to expose an access to the db
+    #ports:
+    #  - '172.17.0.1:3306:3306'
+    depends_on:
+      - init-guac-db
+
+  guacd:
+    image: guacamole/guacd:latest
+    volumes:
+    - ./drive:/drive:rw
+    - ./record:/record:rw
+    restart: always
+
+  guac:
+    image: guacamole/guacamole:latest
+    restart: always
+    ports:
+      - '172.17.0.1:8080:8080'
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: mariadb
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      ##Uncomment below if you want to enable TOTP
+      #TOTP_ENABLED: 'true'
+      #TOTP_ISSUER: Apache Guacamole
+      #TOTP_DIGITS: 6
+      #TOTP_PERIOD: 30
+      #TOTP_MODE: sha1
+    depends_on:
+      - mariadb
+      - guacd
