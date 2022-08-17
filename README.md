@@ -9,8 +9,8 @@ Example CI/CD pipeline showing how to deploy Guacamole on Elestio.
 You are now able to sign to the Admin UI here:
     
     https://[CI_CD_DOMAIN]/guacamole
-    login: root
-    password: (set in env var ADMIN_PASSWORD)
+    login: [ADMIN_LOGIN] (set in env var ADMIN_LOGIN)
+    password: [ADMIN_PASSWORD] (set in env var ADMIN_PASSWORD)
 
 
 # Quick start
