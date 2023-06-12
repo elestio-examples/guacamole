@@ -1,17 +1,21 @@
-version: "3"
+version: "3.3"
 services:
-
   init-guac-db:
     image: guacamole/guacamole:${SOFTWARE_VERSION_TAG}
-    command: ["/bin/sh", "-c", "test -e /init/initdb.sql && echo 'init file already exists' || /opt/guacamole/bin/initdb.sh --mysql > /init/initdb.sql" ]
+    command:
+      [
+        "/bin/sh",
+        "-c",
+        "test -e /init/initdb.sql && echo 'init file already exists' || /opt/guacamole/bin/initdb.sh --mysql > /init/initdb.sql",
+      ]
     volumes:
       - ./init:/init
 
-  mariadb:
-    image: mariadb:10.9.6
-    restart: 'always'
+  mysql:
+    image: mysql:8
+    restart: "always"
     volumes:
-      - ./mariadb:/var/lib/mysql/
+      - ./mysql:/var/lib/mysql/
       - ./init:/docker-entrypoint-initdb.d:ro
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -27,18 +31,18 @@ services:
   guacd:
     image: guacamole/guacd:latest
     volumes:
-    - ./drive:/drive:rw
-    - ./record:/record:rw
+      - ./drive:/drive:rw
+      - ./record:/record:rw
     restart: always
 
   guac:
     image: guacamole/guacamole:latest
     restart: always
     ports:
-      - '172.17.0.1:9090:8080'
+      - "172.17.0.1:9090:8080"
     environment:
       GUACD_HOSTNAME: guacd
-      MYSQL_HOSTNAME: mariadb
+      MYSQL_HOSTNAME: mysql
       MYSQL_PORT: 3306
       MYSQL_DATABASE: guacamole_db
       MYSQL_USER: guacamole_user
@@ -50,5 +54,5 @@ services:
       #TOTP_PERIOD: 30
       #TOTP_MODE: sha1
     depends_on:
-      - mariadb
+      - mysql
       - guacd
