@@ -15,6 +15,6 @@ UPDATE guacamole_user SET disabled='1' WHERE user_id='1';
 GRANT ALL PRIVILEGES ON *.* TO 'guacamole_user'@'%' WITH GRANT OPTION;
 EOF
 
-sleep 10s;
+sleep 30s;
 
 docker-compose exec -T mysql mysql -u root -p${MYSQL_ROOT_PASSWORD} guacamole_db < ./mysql/add.sql
