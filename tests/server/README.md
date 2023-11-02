@@ -46,7 +46,7 @@ Run the project with the following command
     docker-compose up -d
     ./scripts/postInstall.sh
 
-You can access the Web UI at: `http://your-domain:9880`
+You can access the Web UI at: `http://your-domain:9090`
 
 ## Docker-compose
 
@@ -101,7 +101,7 @@ Here are some example snippets to help you get started creating a container.
             env_file:
             - .env
             ports:
-            - "9090:8080"
+            - "172.17.0.1:9090:8080"
             environment:
             GUACD_HOSTNAME: guacd
             MYSQL_HOSTNAME: mysql
