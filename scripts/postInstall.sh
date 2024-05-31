@@ -1,6 +1,7 @@
 #set env vars
 set -o allexport; source .env; set +o allexport;
 
+sleep 110s;
 # Init guacamole database
 docker-compose up init-guac-db
 
